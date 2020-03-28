@@ -1,26 +1,43 @@
-;(function() {
-  var $result = document.getElementById('result')
+window.onload = function() {
+  var EtaConfig = Eta.defaultConfig
+  var gui = new dat.GUI()
+  gui.add(EtaConfig, 'autoEscape').onChange(update)
+  gui
+    .add(EtaConfig.tags, '0')
+    .onChange(update)
+    .name('Tag open')
+  gui
+    .add(EtaConfig.tags, '1')
+    .onChange(update)
+    .name('Tag close')
 
-  function update() {
-    var result = null,
-      input = editor.getValue()
-    try {
-      result = Eta.render(input)
-      $result.parentNode.style.background = '#27ae60'
-    } catch (e) {
-      result = e.stack
-      $result.parentNode.style.background = '#c0392b'
-    }
+  //   gui.add(text, 'speed', -5, 5)
+  //   gui.add(text, 'displayOutline')
+  //   gui.add(text, 'explode')
+}
 
-    $result.textContent = result
+var $result = document.getElementById('result')
+
+function update() {
+  var result = null,
+    input = editor.getValue()
+  try {
+    result = Eta.render(input)
+    $result.parentNode.style.background = '#27ae60'
+  } catch (e) {
+    result = e.stack
+    $result.parentNode.style.background = '#c0392b'
   }
 
-  var editor = ace.edit('editor')
-  editor.setTheme('ace/theme/monokai')
-  editor.getSession().setMode('ace/mode/ejs')
-  editor.on('change', update)
-  editor.setValue(
-    `OK, so have fun! :D
+  $result.textContent = result
+}
+
+var editor = ace.edit('editor')
+editor.setTheme('ace/theme/monokai')
+editor.getSession().setMode('ace/mode/ejs')
+editor.on('change', update)
+editor.setValue(
+  `OK, so have fun! :D
 -------------------
 <%
     var fruits = ["Apple", "Pear", "Orange", "Lemon"]
@@ -45,7 +62,6 @@ You can put any JS inside tags:
 2+4 = <%= 2+4 %>
 
 `,
-    -1
-  )
-  editor.focus()
-})()
+  -1
+)
+editor.focus()
